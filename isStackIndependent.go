@@ -1,27 +1,18 @@
 package main
 
-// IsStackIndependent returns true if the PDA is stack independent, false otherwise
-func (pda *PDA) IsStackIndependent() bool {
+func (t *Transition) IsStackIndependent(pda *PDA) bool {
+
 	for _, transition := range pda.Transitions {
-		if transition.Pop != string(UniversalQuantifier) {
-			return false
+		if transition.Pop == string(UniversalQuantifier) {
+			return true
 		}
 	}
 
-	// For each state, check if the number of transitions from that state
-	// for a given input symbol is equal to the number of stack symbols
-	for _, state := range pda.States {
-		inputSymbols := make(map[string]int)
-		for _, transition := range pda.Transitions {
-			if transition.From == state {
-				inputSymbols[transition.Input]++
-			}
-		}
-		for _, transition := range pda.Transitions {
-			if transition.From == state && len(transition.Push) != inputSymbols[transition.Input] {
-				return false
-			}
+	numTransitions := 0
+	for _, transition := range pda.Transitions {
+		if transition.From == t.From && transition.To == t.To {
+			numTransitions++
 		}
 	}
-	return true
+	return numTransitions == len(pda.StackAlphabet)
 }
