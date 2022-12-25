@@ -20,5 +20,6 @@ type PDA struct {
 
 type Transition struct {
 	From, To, Input string
-	Pop, Push       string
+	Pop             string
+	Push            []string
 }
