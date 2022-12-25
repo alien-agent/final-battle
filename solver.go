@@ -59,12 +59,3 @@ func (pda *PDA) solve(word string) (recognized bool, wasNondeterministic bool, s
 
 	return
 }
-
-func contains(slice []string, s string) bool {
-	for _, v := range slice {
-		if v == s {
-			return true
-		}
-	}
-	return false
-}
