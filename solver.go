@@ -1,44 +1,63 @@
 package main
 
+import "fmt"
+
 type StackState struct {
 	state string
 	stack []string
+	ind   int
 }
 
 func (pda *PDA) solve(word string) (recognized bool, wasNondeterministic bool, stackStateList []StackState) {
-	stack := []string{pda.InitialStackSymbol}
+	stackStateList = []StackState{}
 
-	currentState := pda.InitialState
+	// Initialize the set of visited state-stack pairs
+	visited := map[string]bool{}
 
-	stackStateList = []StackState{{currentState, stack}}
+	queue := []StackState{{state: pda.InitialState, stack: []string{pda.InitialStackSymbol}, ind: 0}}
 
-	for _, input := range word {
-		var nextTransition Transition
-		foundTransition := false
-		for _, t := range pda.Transitions {
-			if t.From == currentState && t.Input == string(input) && t.Pop == stack[len(stack)-1] {
-				nextTransition = t
-				foundTransition = true
-				break
+	for len(queue) > 0 {
+		curr := queue[0]
+		queue = queue[1:]
+
+		key := fmt.Sprintf("%s|%v|%d", curr.state, curr.stack, curr.ind)
+		if visited[key] || curr.ind > len(word) || len(curr.stack) == 0 {
+			continue
+		}
+		visited[key] = true
+
+		stackStateList = append(stackStateList, curr)
+
+		if curr.ind == len(word) {
+			if contains(pda.FinalStates, curr.state) {
+				recognized = true
 			}
+			continue
 		}
 
-		if !foundTransition {
-			return false, false, stackStateList
+		cnt := 0
+		for _, t := range pda.Transitions {
+			if t.From != curr.state || t.Input != string(word[curr.ind]) || (t.Pop != UniversalQuantifier && t.Pop != curr.stack[len(curr.stack)-1]) {
+				continue
+			}
+			cnt += 1
+			if cnt > 1 {
+				wasNondeterministic = true
+			}
+			nextState := t.To
+			nextStack := make([]string, len(curr.stack)-1)
+			copy(nextStack, curr.stack)
+			for i := len(t.Push) - 1; i >= 0; i-- {
+				nextStack = append(nextStack, t.Push[i])
+			}
+
+			next := StackState{state: nextState, stack: nextStack, ind: curr.ind + 1}
+			queue = append(queue, next)
+
 		}
-
-		stack = stack[:len(stack)-1]
-
-		for i := len(nextTransition.Push) - 1; i >= 0; i-- {
-			stack = append(stack, nextTransition.Push[i])
-		}
-
-		currentState = nextTransition.To
-
-		stackStateList = append(stackStateList, StackState{state: currentState, stack: stack})
 	}
 
-	return contains(pda.FinalStates, currentState), false, stackStateList
+	return
 }
 
 func contains(slice []string, s string) bool {
