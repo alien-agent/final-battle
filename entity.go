@@ -1,8 +1,8 @@
 package main
 
 const (
-	Epsilon             = 'ε'
-	UniversalQuantifier = '∀'
+	Epsilon             = "e"
+	UniversalQuantifier = "A"
 )
 
 type PDA struct {
