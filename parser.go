@@ -1,60 +1,67 @@
 package main
 
 import (
-	"fmt"
-	"regexp"
 	"strings"
 )
 
-var cleanerRegex = regexp.MustCompile(`[\s{}]+`)
+var lineCleaner = strings.NewReplacer(
+	" ", "",
+	"\r", "",
+	"\t", "",
+)
 
-func parse(input string) *PDA {
-	var (
-		lines  = strings.Split(input, "\n")
-		result PDA
-	)
+type Parser struct {
+	Arrow               string
+	Delimiter           string
+	TransitionDelimiter string
+	UniversalQuantifier string
+	Epsilon             string
+}
 
-	for _, line := range lines {
-		cleanLine := cleanerRegex.ReplaceAllString(line, "")
-		if cleanLine == "" {
+func (p *Parser) Parse(input string) *PDA {
+	var result PDA
+	for _, v := range strings.Split(input, "\n") {
+		line := lineCleaner.Replace(v)
+		if line == "" {
 			continue
 		}
-		parseLine(cleanLine, &result)
+
+		p.parseLine(line, &result)
 	}
 
-	fmt.Println(result)
 	return &result
 }
 
-func parseLine(line string, pda *PDA) {
-	lineSplit := strings.Split(line, "->")
+func (p *Parser) parseLine(line string, target *PDA) {
+	lineSplit := strings.Split(line, p.Arrow)
 	name, value := lineSplit[0], lineSplit[1]
+	splitter := func(s string) []string { return strings.Split(strings.Trim(s, "{}"), ",") }
 
 	switch name {
 	case "InitialStackSymbol":
-		pda.InitialStackSymbol = value
+		target.InitialStackSymbol = value
 	case "InitialState":
-		pda.InitialState = value
+		target.InitialState = value
 	case "States":
-		states := strings.Split(value, ",")
-		pda.States = states
+		states := splitter(value)
+		target.States = states
 	case "FinalStates":
-		states := strings.Split(value, ",")
-		pda.FinalStates = states
+		states := splitter(value)
+		target.FinalStates = states
 	case "InputAlphabet":
-		ids := strings.Split(value, ",")
-		pda.InputAlphabet = ids
+		ids := splitter(value)
+		target.InputAlphabet = ids
 	case "StackAlphabet":
-		ids := strings.Split(value, ",")
-		pda.StackAlphabet = ids
+		ids := splitter(value)
+		target.StackAlphabet = ids
 	case "Transition":
-		valueSplit := strings.Split(value, "/")
-		pda.Transitions = append(pda.Transitions, Transition{
+		valueSplit := strings.Split(value, p.TransitionDelimiter)
+		target.Transitions = append(target.Transitions, Transition{
 			From:  valueSplit[0],
 			To:    valueSplit[1],
 			Input: valueSplit[2],
 			Pop:   valueSplit[3],
-			Push:  strings.Split(valueSplit[4], ","),
+			Push:  strings.Split(valueSplit[4], p.Delimiter),
 		})
 	default:
 		panic("invalid input: " + line)
