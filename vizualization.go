@@ -20,7 +20,7 @@ func (pda *PDA) ToDOT() string {
 	// Add the other states
 	for _, state := range pda.States {
 		if !contains(pda.FinalStates, state) && state != pda.InitialState {
-			fmt.Fprintf(&graph, "  %s [shape=point];\n", state)
+			fmt.Fprintf(&graph, "  %s [shape=oval];\n", state)
 		}
 	}
 
