@@ -2,7 +2,7 @@ package main
 
 import "golang.org/x/exp/slices"
 
-func (p *PDA) IsStackIndependent(t *Transition) bool {
+func (p *PDA) IsStackIndependent(t Transition) bool {
 	if t.Pop == string(UniversalQuantifier) {
 		return true
 	}
