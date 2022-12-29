@@ -7,13 +7,33 @@ func (p *PDA) IsStackIndependent(t Transition) bool {
 		return true
 	}
 
-	numTransitions := 0
+	var PopSymbols []string
 	for _, transition := range p.Transitions {
 		if transition.From == t.From && transition.To == t.To {
-			numTransitions++
+			PopSymbols = append(PopSymbols, transition.Pop)
 		}
 	}
-	return numTransitions == len(p.StackAlphabet)
+
+	AlphabetMap := make(map[string]struct{})
+	for _, element := range p.StackAlphabet {
+		AlphabetMap[element] = struct{}{}
+	}
+
+	PopSymbolsMap := make(map[string]struct{})
+	for _, element := range PopSymbols {
+		PopSymbolsMap[element] = struct{}{}
+	}
+
+	// Check if the two sets are equal
+	if len(AlphabetMap) != len(PopSymbolsMap) {
+		return false
+	}
+	for key := range AlphabetMap {
+		if _, ok := PopSymbolsMap[key]; !ok {
+			return false
+		}
+	}
+	return true
 }
 
 func (p *PDA) IsTransitionDeterministic(t Transition) bool {
