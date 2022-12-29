@@ -7,40 +7,36 @@ func (p *PDA) IsStackIndependent(t Transition) bool {
 		return true
 	}
 
-	var array2 []string
+	var PopSymbols []string
 	for _, transition := range p.Transitions {
 		if transition.From == t.From && transition.To == t.To {
-			array2 = append(array2, transition.Pop)
+			PopSymbols = append(PopSymbols, transition.Pop)
 		}
 	}
 
-
-	// Create a map to store the elements of array1
-	set1 := make(map[string]struct{})
+	AlphabetMap := make(map[string]struct{})
 	for _, element := range p.StackAlphabet {
-		set1[element] = struct{}{}
+		AlphabetMap[element] = struct{}{}
 	}
 
-	// Create a map to store the elements of array2
-	set2 := make(map[string]struct{})
-	for _, element := range array2 {
-		set2[element] = struct{}{}
+	PopSymbolsMap := make(map[string]struct{})
+	for _, element := range PopSymbols {
+		PopSymbolsMap[element] = struct{}{}
 	}
 
 	// Check if the two sets are equal
-	if len(set1) == len(set2) {
-		equal := true
-		for key := range set1 {
-			if _, ok := set2[key]; !ok {
-				equal = false
-				break
-			}
+	if len(AlphabetMap) != len(PopSymbolsMap) {
+		return false
+	}
+	equal := true
+	for key := range AlphabetMap {
+		if _, ok := PopSymbolsMap[key]; !ok {
+			equal = false
+			break
 		}
-		if equal {
-			return true
-		} else {
-			return false
-		}
+	}
+	if equal {
+		return true
 	} else {
 		return false
 	}
