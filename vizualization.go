@@ -28,7 +28,7 @@ func (pda *PDA) ToDOT() string {
 			color = "red"
 		}
 		if !contains(pda.FinalStates, state) && state != pda.InitialState {
-			fmt.Fprintf(&graph, "  %s [shape=oval, color=%s];\n", state, color)
+			fmt.Fprintf(&graph, "  %s [shape=circle, color=%s];\n", state, color)
 		}
 	}
 
