@@ -1,9 +1,16 @@
-package main
+package solution
 
-import "testing"
+import (
+	"final-battle/model"
+	"testing"
+)
+
+const testEpsilon = "ε"
 
 func TestBracketSequencePDA(t *testing.T) {
-	pda := &PDA{
+	pda := &model.PDA{
+		Epsilon: testEpsilon,
+
 		States:      []string{"q0", "q1"},
 		FinalStates: []string{"q0"},
 
@@ -13,11 +20,11 @@ func TestBracketSequencePDA(t *testing.T) {
 		InitialState:       "q0",
 		InitialStackSymbol: "Z0",
 
-		Transitions: []Transition{
+		Transitions: []model.Transition{
 			{"q0", "q1", "(", "Z0", []string{"B", "Z0"}},
 			{"q1", "q1", "(", "B", []string{"B", "B"}},
 			{"q1", "q1", ")", "B", []string{}},
-			{"q1", "q0", string(Epsilon), "Z0", []string{"Z0"}},
+			{"q1", "q0", testEpsilon, "Z0", []string{"Z0"}},
 		},
 	}
 
@@ -34,7 +41,7 @@ func TestBracketSequencePDA(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		recognized, _, _ := pda.solve(test.word + string(Epsilon))
+		recognized, _, _ := Solve(pda, test.word+testEpsilon)
 		if recognized != test.expected {
 			t.Errorf("unexpected result for word %q: got %v, want %v", test.word, recognized, test.expected)
 		}
