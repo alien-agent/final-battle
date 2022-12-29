@@ -14,13 +14,21 @@ func (pda *PDA) ToDOT() string {
 
 	// Add the final states
 	for _, state := range pda.FinalStates {
-		fmt.Fprintf(&graph, "  %s [shape=doublecircle];\n", state)
+		color := "black"
+		if pda.IsTrapState(state) {
+			color = "red"
+		}
+		fmt.Fprintf(&graph, "  %s [shape=doublecircle, color=%s];\n", state, color)
 	}
 
 	// Add the other states
 	for _, state := range pda.States {
+		color := "black"
+		if pda.IsTrapState(state) {
+			color = "red"
+		}
 		if !contains(pda.FinalStates, state) && state != pda.InitialState {
-			fmt.Fprintf(&graph, "  %s [shape=oval];\n", state)
+			fmt.Fprintf(&graph, "  %s [shape=oval, color=%s];\n", state, color)
 		}
 	}
 
