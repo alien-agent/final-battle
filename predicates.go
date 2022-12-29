@@ -1,9 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"golang.org/x/exp/slices"
-)
+import "golang.org/x/exp/slices"
 
 func (p *PDA) IsStackIndependent(t Transition) bool {
 	if t.Pop == string(UniversalQuantifier) {
