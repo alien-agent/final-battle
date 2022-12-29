@@ -13,22 +13,24 @@ func (pda *PDA) ToDOT() string {
 	fmt.Fprintf(&graph, "  %s [shape=doublecircle];\n", pda.InitialState)
 
 	// Add the final states
+	fmt.Fprintf(&graph, "[shape=doublecircle];\n")
 	for _, state := range pda.FinalStates {
 		color := "black"
 		if pda.IsTrapState(state) {
 			color = "red"
 		}
-		fmt.Fprintf(&graph, "  %s [shape=doublecircle, color=%s];\n", state, color)
+		fmt.Fprintf(&graph, "  %s [color=%s];\n", state, color)
 	}
 
 	// Add the other states
+	fmt.Fprintf(&graph, "[shape=circle];\n")
 	for _, state := range pda.States {
 		color := "black"
 		if pda.IsTrapState(state) {
 			color = "red"
 		}
 		if !contains(pda.FinalStates, state) && state != pda.InitialState {
-			fmt.Fprintf(&graph, "  %s [shape=circle, color=%s];\n", state, color)
+			fmt.Fprintf(&graph, "  %s [color=%s];\n", state, color)
 		}
 	}
 
@@ -38,7 +40,22 @@ func (pda *PDA) ToDOT() string {
 		if len(transition.Push) > 0 {
 			label += ", " + strings.Join(transition.Push, "")
 		}
-		fmt.Fprintf(&graph, "  %s -> %s [label=\"%s\"];\n", transition.From, transition.To, label)
+
+		is_determenistic := pda.IsTransitionDeterministic(transition)
+		style := "none"
+		if is_determenistic {
+			style = "dashed"
+		}
+
+		is_independent := pda.IsStackIndependent(transition)
+		color := "black"
+		if is_independent {
+			color = "green"
+		}
+
+
+		fmt.Fprintf(&graph, "  %s -> %s [label=\"%s\", style=%s, color=%s];\n",
+			transition.From, transition.To, label, style, color)
 	}
 
 	return fmt.Sprintf("digraph {\n%s}", graph.String())
