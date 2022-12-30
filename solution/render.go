@@ -43,7 +43,7 @@ func RenderDOT(pda *model.PDA) string {
 	for _, transition := range pda.Transitions {
 		label := fmt.Sprintf("%s/%s/", transition.Input, transition.Pop)
 		if len(transition.Push) > 0 {
-			label += ", " + strings.Join(transition.Push, "")
+			label += strings.Join(transition.Push, ", ")
 		}
 
 		IsDeterministic := pda.IsTransitionDeterministic(transition)
