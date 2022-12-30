@@ -36,7 +36,6 @@ func RenderDOT(pda *model.PDA) string {
 		}
 		if !contains(pda.FinalStates, state) && state != pda.InitialState {
 			fmt.Fprintf(&graph, "  %s [shape=%s, color=%s];\n", state, shape ,color)
-			fmt.Fprintf(&graph, "  %s [color=%s];\n", state, color)
 		}
 	}
 
@@ -59,7 +58,7 @@ func RenderDOT(pda *model.PDA) string {
 			color = "green"
 		}
 
-		fmt.Fprintf(&graph, "  %s -> %s [label=\"%s\", style=%s, color=%s];\n",
+		fmt.Fprintf(&graph, "  %s -> %s [label=\"%s\"/style=%s/color=%s];\n",
 			transition.From, transition.To, label, style, color)
 	}
 
