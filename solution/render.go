@@ -28,7 +28,7 @@ func RenderDOT(pda *model.PDA) string {
 			shape = "doublecircle"
 		}
 		if !contains(pda.FinalStates, state) && state != pda.InitialState {
-			fmt.Fprintf(&graph, "  %s [shape=%s, color=%s];\n\n", state, shape ,color)
+			fmt.Fprintf(&graph, "  %s [shape=%s, color=%s];\n", state, shape ,color)
 		}
 	}
 
