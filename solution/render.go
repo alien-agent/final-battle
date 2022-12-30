@@ -11,20 +11,10 @@ import (
 func RenderDOT(pda *model.PDA) string {
 	var graph strings.Builder
 
-	fmt.Fprintf(&graph, "  graph [pad=\"1\", nodesep=\"1\", ranksep=\"3\"];")
+	fmt.Fprintf(&graph, "  graph [pad=\"1\", nodesep=\"1\", ranksep=\"3\"];\n")
 
 	// Add the initial state
 	fmt.Fprintf(&graph, "  %s [shape=doublecircle];\n", pda.InitialState)
-
-	// Add the final states
-	//for _, state := range pda.FinalStates {
-	//	color := "black"
-	//	if pda.IsTrapState(state) {
-	//		color = "red"
-	//	}
-	//	fmt.Fprintf(&graph, "  %s [shape=doublecircle, color=%s];\n", state, color)
-	//	fmt.Fprintf(&graph, "  %s [color=%s];\n", state, color)
-	//}
 
 	// Add the other states
 	for _, state := range pda.States {
