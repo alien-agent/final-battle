@@ -3,6 +3,7 @@ package solution
 import (
 	"final-battle/model"
 	"fmt"
+	"golang.org/x/exp/slices"
 	"strings"
 )
 
@@ -13,14 +14,14 @@ func RenderDOT(pda *model.PDA) string {
 	fmt.Fprintf(&graph, "  %s [shape=doublecircle];\n", pda.InitialState)
 
 	// Add the final states
-	for _, state := range pda.FinalStates {
-		color := "black"
-		if pda.IsTrapState(state) {
-			color = "red"
-		}
-		fmt.Fprintf(&graph, "  %s [shape=doublecircle, color=%s];\n", state, color)
-		fmt.Fprintf(&graph, "  %s [color=%s];\n", state, color)
-	}
+	//for _, state := range pda.FinalStates {
+	//	color := "black"
+	//	if pda.IsTrapState(state) {
+	//		color = "red"
+	//	}
+	//	fmt.Fprintf(&graph, "  %s [shape=doublecircle, color=%s];\n", state, color)
+	//	fmt.Fprintf(&graph, "  %s [color=%s];\n", state, color)
+	//}
 
 	// Add the other states
 	for _, state := range pda.States {
@@ -28,8 +29,13 @@ func RenderDOT(pda *model.PDA) string {
 		if pda.IsTrapState(state) {
 			color = "red"
 		}
+
+		shape := "circle"
+		if slices.Contains(pda.FinalStates, state) {
+			shape = "doublecircle"
+		}
 		if !contains(pda.FinalStates, state) && state != pda.InitialState {
-			fmt.Fprintf(&graph, "  %s [shape=circle, color=%s];\n", state, color)
+			fmt.Fprintf(&graph, "  %s [shape=%s, color=%s];\n", state, shape ,color)
 			fmt.Fprintf(&graph, "  %s [color=%s];\n", state, color)
 		}
 	}
@@ -40,7 +46,6 @@ func RenderDOT(pda *model.PDA) string {
 		if len(transition.Push) > 0 {
 			label += ", " + strings.Join(transition.Push, "")
 		}
-		fmt.Fprintf(&graph, "  %s -> %s [label=\"%s\"];\n", transition.From, transition.To, label)
 
 		IsDeterministic := pda.IsTransitionDeterministic(transition)
 		style := "none"
