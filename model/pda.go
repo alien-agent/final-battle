@@ -55,11 +55,24 @@ func (p PDA) IsStackIndependent(t Transition) bool {
 }
 
 func (p PDA) IsTransitionDeterministic(t Transition) bool {
-	return !(t.Input == p.Epsilon) &&
-		!slices.ContainsFunc(p.Transitions, func(tt Transition) bool { return tt.From == t.From && tt.Input == t.Input })
+	// If we can find another transition with same From, Input, and Pop (accounting for UniversalQuantifier),
+	// then original transition is considered non-deterministic.
+	for _, tt := range p.Transitions {
+		if tt.From != t.From {
+			continue
+		}
+
+		if (tt.Input == t.Input || tt.Input == p.Epsilon || t.Input == p.Epsilon) &&
+			(tt.Pop == t.Pop || tt.Pop == p.UniversalQuantifier || t.Pop == p.UniversalQuantifier) &&
+			!t.Equal(tt) {
+			return false
+		}
+	}
+
+	return true
 }
 
 func (p PDA) IsTrapState(state string) bool {
 	return !slices.Contains(p.FinalStates, state) &&
-		!slices.ContainsFunc(p.Transitions, func(t Transition) bool { return t.From == state })
+		!slices.ContainsFunc(p.Transitions, func(t Transition) bool { return t.From == state && t.To != state })
 }
