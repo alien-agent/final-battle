@@ -10,6 +10,9 @@ import (
 // RenderDOT returns a string with DOT representation of PDA.
 func RenderDOT(pda *model.PDA) string {
 	var graph strings.Builder
+
+	fmt.Fprintf(&graph, "  graph [pad=\"1\", nodesep=\"1\", ranksep=\"3\"];")
+
 	// Add the initial state
 	fmt.Fprintf(&graph, "  %s [shape=doublecircle];\n", pda.InitialState)
 
@@ -43,7 +46,7 @@ func RenderDOT(pda *model.PDA) string {
 	for _, transition := range pda.Transitions {
 		label := fmt.Sprintf("%s/%s/", transition.Input, transition.Pop)
 		if len(transition.Push) > 0 {
-			label += strings.Join(transition.Push, ", ")
+			label += strings.Join(transition.Push, ",")
 		}
 
 		IsDeterministic := pda.IsTransitionDeterministic(transition)
