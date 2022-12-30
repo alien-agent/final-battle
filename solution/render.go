@@ -13,10 +13,7 @@ func RenderDOT(pda *model.PDA) string {
 
 	fmt.Fprintf(&graph, "  graph [pad=\"1\", nodesep=\"1\", ranksep=\"3\"];\n")
 
-	// Add the initial state
-	fmt.Fprintf(&graph, "  %s [shape=doublecircle];\n", pda.InitialState)
-
-	// Add the other states
+	// Add states
 	for _, state := range pda.States {
 		color := "black"
 		if pda.IsTrapState(state) {
@@ -27,27 +24,28 @@ func RenderDOT(pda *model.PDA) string {
 		if slices.Contains(pda.FinalStates, state) {
 			shape = "doublecircle"
 		}
-		if !contains(pda.FinalStates, state) && state != pda.InitialState {
-			fmt.Fprintf(&graph, "  %s [shape=%s, color=%s];\n", state, shape ,color)
+
+		style := "none"
+		if state == pda.InitialState {
+			style = "dashed"
 		}
+		fmt.Fprintf(&graph, "  %s [shape=%s, color=%s, style=%s];\n", state, shape, color, style)
 	}
 
-	// Add the transitions
+	// Add transitions
 	for _, transition := range pda.Transitions {
 		label := fmt.Sprintf("%s/%s/", transition.Input, transition.Pop)
 		if len(transition.Push) > 0 {
 			label += strings.Join(transition.Push, ",")
 		}
 
-		IsDeterministic := pda.IsTransitionDeterministic(transition)
 		style := "none"
-		if IsDeterministic {
+		if pda.IsTransitionDeterministic(transition) {
 			style = "dashed"
 		}
 
-		IsIndependent := pda.IsStackIndependent(transition)
 		color := "black"
-		if IsIndependent {
+		if pda.IsStackIndependent(transition) {
 			color = "green"
 		}
 
