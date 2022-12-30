@@ -35,13 +35,13 @@ func RenderDOT(pda *model.PDA) string {
 			shape = "doublecircle"
 		}
 		if !contains(pda.FinalStates, state) && state != pda.InitialState {
-			fmt.Fprintf(&graph, "  %s [shape=%s, color=%s];\n", state, shape ,color)
+			fmt.Fprintf(&graph, "  %s [shape=%s, color=%s];\n\n", state, shape ,color)
 		}
 	}
 
 	// Add the transitions
 	for _, transition := range pda.Transitions {
-		label := fmt.Sprintf("%s, %s", transition.Input, transition.Pop)
+		label := fmt.Sprintf("%s/%s/", transition.Input, transition.Pop)
 		if len(transition.Push) > 0 {
 			label += ", " + strings.Join(transition.Push, "")
 		}
@@ -58,7 +58,7 @@ func RenderDOT(pda *model.PDA) string {
 			color = "green"
 		}
 
-		fmt.Fprintf(&graph, "  %s -> %s [label=\"%s\"/style=%s/color=%s];\n",
+		fmt.Fprintf(&graph, "  %s -> %s [label=\"%s\", style=%s, color=%s];\n",
 			transition.From, transition.To, label, style, color)
 	}
 
