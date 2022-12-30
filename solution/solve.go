@@ -33,18 +33,20 @@ func Solve(pda *model.PDA, word string) (recognized bool, wasNondeterministic bo
 
 		stackStateList = append(stackStateList, curr)
 
-		if curr.Ind == utf8.RuneCountInString(word) {
+		if curr.Ind == utf8.RuneCountInString(word)-1 {
 			if slices.Contains(pda.FinalStates, curr.State) {
 				recognized = true
 			}
-			continue
 		}
 
 		cnt := 0
 		for _, t := range pda.Transitions {
 			if t.From != curr.State ||
-				t.Input != string([]rune(word)[curr.Ind]) ||
-				(t.Pop != pda.UniversalQuantifier && t.Pop != curr.Stack[len(curr.Stack)-1]) {
+				(t.Input != pda.Epsilon &&
+					(curr.Ind == utf8.RuneCountInString(word) ||
+						(t.Input != pda.UniversalQuantifier &&
+							t.Input != string([]rune(word)[curr.Ind])))) ||
+				(t.Pop != pda.UniversalQuantifier && t.Pop != pda.Epsilon && t.Pop != curr.Stack[len(curr.Stack)-1]) {
 				continue
 			}
 			cnt += 1
@@ -52,13 +54,23 @@ func Solve(pda *model.PDA, word string) (recognized bool, wasNondeterministic bo
 				wasNondeterministic = true
 			}
 			nextState := t.To
-			nextStack := make([]string, len(curr.Stack)-1)
+
+			nextStackLen := len(curr.Stack)
+			if t.Pop != pda.Epsilon {
+				nextStackLen -= 1
+			}
+			nextInd := curr.Ind
+			if t.Input != pda.Epsilon {
+				nextInd += 1
+			}
+
+			nextStack := make([]string, nextStackLen)
 			copy(nextStack, curr.Stack)
 			for i := len(t.Push) - 1; i >= 0; i-- {
 				nextStack = append(nextStack, t.Push[i])
 			}
 
-			next := StackState{State: nextState, Stack: nextStack, Ind: curr.Ind + 1}
+			next := StackState{State: nextState, Stack: nextStack, Ind: nextInd}
 			queue = append(queue, next)
 
 		}
