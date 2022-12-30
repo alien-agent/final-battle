@@ -1,15 +1,16 @@
-package main
+package solution
 
 import (
+	"final-battle/model"
 	"fmt"
 	"strings"
 )
 
-// ToDOT generates a DOT format representation of the PDA
-func (pda *PDA) ToDOT() string {
+// RenderDOT returns a string with DOT representation of PDA.
+func RenderDOT(pda *model.PDA) string {
 	var graph strings.Builder
 
-	// Add the initial state
+	// Add the initial State
 	fmt.Fprintf(&graph, "  %s [shape=doublecircle];\n", pda.InitialState)
 
 	// Add the final states
