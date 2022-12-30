@@ -47,6 +47,12 @@ func main() {
 	}
 	pda := prs.Parse(string(pdaContent))
 
+	err = os.WriteFile("pda.dot", []byte(solution.RenderDOT(pda)), 0777)
+	if err != nil {
+		fmt.Println("Failed to write DOT file:", err)
+		os.Exit(1)
+	}
+
 	if opts.Mode == ModeSTDIN {
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
