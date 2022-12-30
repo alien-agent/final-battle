@@ -51,3 +51,4 @@ Epsilon ε
 
 ### Условные обозначения
 Условные обозначения для графа, полученного в результате работы программы
+![Alt text](Images/legend.png)![Alt text](Images/states_legend.png)
