@@ -41,7 +41,7 @@ func TestBracketSequencePDA(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		recognized, _, _ := Solve(pda, test.word+testEpsilon)
+		recognized, _, _ := Solve(pda, test.word)
 		if recognized != test.expected {
 			t.Errorf("unexpected result for word %q: got %v, want %v", test.word, recognized, test.expected)
 		}

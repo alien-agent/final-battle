@@ -15,7 +15,7 @@ type StackState struct {
 
 func Solve(pda *model.PDA, word string) (recognized bool, wasNondeterministic bool, stackStateList []StackState) {
 	stackStateList = []StackState{}
-
+	word = word + pda.Epsilon
 	// Initialize the set of visited State-Stack pairs
 	visited := map[string]bool{}
 
