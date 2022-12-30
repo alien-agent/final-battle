@@ -13,7 +13,6 @@ func RenderDOT(pda *model.PDA) string {
 	fmt.Fprintf(&graph, "  %s [shape=doublecircle];\n", pda.InitialState)
 
 	// Add the final states
-	fmt.Fprintf(&graph, "[shape=doublecircle];\n")
 	for _, state := range pda.FinalStates {
 		color := "black"
 		if pda.IsTrapState(state) {
@@ -24,7 +23,6 @@ func RenderDOT(pda *model.PDA) string {
 	}
 
 	// Add the other states
-	fmt.Fprintf(&graph, "[shape=circle];\n")
 	for _, state := range pda.States {
 		color := "black"
 		if pda.IsTrapState(state) {
