@@ -48,3 +48,34 @@ TransitionDelimiter /
 UniversalQuantifier ∀
 Epsilon ε
 ```
+
+### Грамматика
+
+Стартовый нетерминал: [PDA]
+
+```
+[PDA] -> [STATES_STRING]'\n'[FINAL_STATES_STRING]'\n'[INPUT_ALPHABET_STRING]'\n'[STACK_ALPHABET_STRING]'\n'[INITIAL_STATE_STRING]'\n[INITIAL_STACK_SYMBOL_STRING]'\n'[TRANSITIONS_STRING]
+[STATES_STRING] -> States [ARROW] [STATES]
+[FINAL_STATES_STRING] -> FinalStates [ARROW] [STATES]
+[INPUT_ALPHABET_STRING] -> InputAlphabet [ARROW] [INPUTS]
+[STACK_ALPHABET_STRING] -> StackAlphabet [ARROW] [INPUTS]
+[INITIAL_STATE_STRING] -> InitialState [ARROW] [ID]
+[INITIAL_STACK_SYMBOL_STRING] -> InitialStackSymbol [ARROW] [ID]
+[TRANSITIONS_STRING] -> [SINGLE_TRANSITION_STRING] | [SINGLE_TRANSITION_STRING]'\n'[TRANSITIONS_STRING]
+[SINGLE_TRANSITION_STRING] -> Transition [ARROW] [FROM] [TRANSITION_DELIMETER] [TO] [TRANSITION_DELIMETER] [INPUT] [TRANSITION_DELIMETER] [POP] [TRANSITION_DELIMETER] [PUSH]
+[FROM] -> [ID]
+[TO] -> [ID]
+[INPUT] -> [CHAR_EXTENDED]
+[POP] -> [CHAR_EXTENDED]
+[PUSH] -> [CHAR] | [CHAR][DELIMETER] [PUSH_NOT_EMPTY] | ε
+[PUSH_NOT_EMPTY] -> [CHAR] | [CHAR][DELIMETER] [PUSH_NOT_EMPTY]
+[STATES] -> [ID] | [ID][DELIMETER] [STATES]
+[ID] -> [CHAR]+
+[CHAR] -> [a-zA-z0-9]
+[CHAR_EXTENDED] -> [CHAR] | [UniversalQuantifier] | [Epsilon]
+[INPUTS] -> [CHAR_EXTENDED] | [CHAR_EXTENDED][DELIMETER] [INPUTS]
+```
+
+### Условные обозначения
+Условные обозначения для графа, полученного в результате работы программы
+![Alt text](Images/transitions_legend.png)![Alt text](Images/states_legend.png)

@@ -28,7 +28,9 @@ func (p PDA) IsStackIndependent(t Transition) bool {
 			if transition.Pop == p.UniversalQuantifier {
 				return true
 			}
-			PopSymbols = append(PopSymbols, transition.Pop)
+			if transition.Pop != p.Epsilon {
+				PopSymbols = append(PopSymbols, transition.Pop)
+			}
 		}
 	}
 
