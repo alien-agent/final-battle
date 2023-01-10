@@ -22,7 +22,7 @@ func NewFromLanguageFile(filename string) (*Parser, error) {
 
 	var result = NewDefault()
 	for i, line := range strings.Split(string(contents), "\n") {
-		split := strings.Split(line, " ")
+		split := strings.Split(strings.Trim(line, "\t\r\n"), " ")
 		if len(split) != 2 {
 			return nil, fmt.Errorf("line [%d] is malformed", i)
 		}

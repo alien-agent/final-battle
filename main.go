@@ -72,7 +72,7 @@ func main() {
 }
 
 func solveAndReport(pda *model.PDA, word string) {
-	recognized, nonDet, stackTrace := solution.Solve(pda, word)
+	recognized, nonDet, stackTrace := solution.Solve(pda, strings.Trim(word, "\n\r\t"))
 	fmt.Printf("Input: \"%s\"; Recognized? : %v; Non-Deterministic? : %v; Stack history:\n", word, recognized, nonDet)
 	for _, v := range stackTrace {
 		fmt.Printf("%v - %v\n", v.State, v.Stack)
