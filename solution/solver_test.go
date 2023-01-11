@@ -68,7 +68,7 @@ func TestAbcPDA(t *testing.T) {
 			{"q0", "q1", "a", "Z0", []string{"B", "Z0"}},
 			{"q1", "q1", "a", "B", []string{"B", "B"}},
 			{"q1", "q1", "b", "B", []string{}},
-			{"q1", "q2", "b", "B", []string{"Z0", "Z0"}},
+			{"q1", "q2", "b", "Z0", []string{"Z0"}},
 			{"q1", "q0", "c", "!", []string{"!"}},
 			{"q1", "q2", "@", "B", []string{"B"}},
 		},
