@@ -2,7 +2,7 @@
 ## Участники
 - Пашкевич Денис [@alien-agent](github.com/alien-agent)
 - Сайкин Антон [@kekega](github.com/kekega)
-- Стафиефский Стас [@stasstaf](github.com/stasstaf)
+- Стафиевский Стас [@stasstaf](github.com/stasstaf)
 
 ## Установка
 Требуется Go 1.19, но скорее всего будет работать и на более ранних версиях.
