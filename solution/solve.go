@@ -67,6 +67,11 @@ func Solve(pda *model.PDA, word string) (recognized bool, wasNondeterministic bo
 			nextStack := make([]string, nextStackLen)
 			copy(nextStack, curr.Stack)
 			for i := len(t.Push) - 1; i >= 0; i-- {
+				if t.Pop == pda.UniversalQuantifier && t.Push[i] == pda.UniversalQuantifier {
+					topSymbol := curr.Stack[len(curr.Stack)-1]
+					nextStack = append(nextStack, topSymbol)
+					continue
+				}
 				nextStack = append(nextStack, t.Push[i])
 			}
 
