@@ -5,9 +5,8 @@ import (
 	"testing"
 )
 
-const testEpsilon = "ε"
-
 func TestBracketSequencePDA(t *testing.T) {
+	const testEpsilon = "ε"
 	pda := &model.PDA{
 		Epsilon: testEpsilon,
 
@@ -52,9 +51,11 @@ func TestBracketSequencePDA(t *testing.T) {
 }
 
 func TestAbcPDA(t *testing.T) {
+	const testEpsilon = "EPSILON"
+	const testAny = "ANY"
 	pda := &model.PDA{
-		Epsilon:             "@",
-		UniversalQuantifier: "!",
+		Epsilon:             testEpsilon,
+		UniversalQuantifier: testAny,
 		States:              []string{"q0", "q1", "q2"},
 		FinalStates:         []string{"q0"},
 
@@ -69,8 +70,8 @@ func TestAbcPDA(t *testing.T) {
 			{"q1", "q1", "a", "B", []string{"B", "B"}},
 			{"q1", "q1", "b", "B", []string{}},
 			{"q1", "q2", "b", "Z0", []string{"Z0"}},
-			{"q1", "q0", "c", "!", []string{"!"}},
-			{"q1", "q2", "@", "B", []string{"B"}},
+			{"q1", "q0", "c", testAny, []string{testAny}},
+			{"q1", "q2", testEpsilon, "B", []string{"B"}},
 		},
 	}
 
