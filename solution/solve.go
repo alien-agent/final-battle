@@ -26,14 +26,14 @@ func Solve(pda *model.PDA, word string) (recognized bool, wasNondeterministic bo
 		queue = queue[1:]
 
 		key := fmt.Sprintf("%s|%v|%d", curr.State, curr.Stack, curr.Ind)
-		if visited[key] || curr.Ind > utf8.RuneCountInString(word) || len(curr.Stack) == 0 {
+		if visited[key] || curr.Ind > utf8.RuneCountInString(word)-utf8.RuneCountInString(pda.Epsilon)+1 || len(curr.Stack) == 0 {
 			continue
 		}
 		visited[key] = true
 
 		stackStateList = append(stackStateList, curr)
 
-		if curr.Ind == utf8.RuneCountInString(word)-1 {
+		if curr.Ind == utf8.RuneCountInString(word)-utf8.RuneCountInString(pda.Epsilon) {
 			if slices.Contains(pda.FinalStates, curr.State) {
 				recognized = true
 			}

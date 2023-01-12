@@ -25,10 +25,7 @@ func (p PDA) IsStackIndependent(t Transition) bool {
 	var PopSymbols []string
 	for _, transition := range p.Transitions {
 		if transition.From == t.From && transition.To == t.To {
-			if transition.Pop == p.UniversalQuantifier {
-				return true
-			}
-			if transition.Pop != p.Epsilon {
+			if transition.Pop != p.Epsilon && transition.Pop != p.UniversalQuantifier {
 				PopSymbols = append(PopSymbols, transition.Pop)
 			}
 		}
